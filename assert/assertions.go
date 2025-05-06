@@ -1514,7 +1514,7 @@ func calcRelativeError(expected, actual interface{}) (float64, error) {
 	af, aok := toFloat(expected)
 	bf, bok := toFloat(actual)
 	if !aok || !bok {
-		return 0, fmt.Errorf("Parameters must be numerical")
+		return 0, errors.New("Parameters must be numerical")
 	}
 	if math.IsNaN(af) && math.IsNaN(bf) {
 		return 0, nil
@@ -1523,13 +1523,13 @@ func calcRelativeError(expected, actual interface{}) (float64, error) {
 		return 0, errors.New("expected value must not be NaN")
 	}
 	if af == 0 {
-		return 0, fmt.Errorf("expected value must have a value other than zero to calculate the relative error")
+		return 0, errors.New("expected value must have a value other than zero to calculate the relative error")
 	}
 	if math.IsNaN(bf) {
 		return 0, errors.New("actual value must not be NaN")
 	}
 
-	return math.Abs(af-bf) / math.Abs(af), nil
+	return math.Abs((af - bf) / af), nil
 }
 
 // InEpsilon asserts that expected and actual have a relative error less than epsilon
